@@ -102,7 +102,11 @@ opterr = false;
 TODO: Add the remaining elements into the longOpts array.
 */
 // use getopt to find command line options
-struct option longOpts[] = {{ "print", required_argument, nullptr, 'p' },
+struct option longOpts[] = {
+{ "print", required_argument, nullptr, 'p' },
+{ "name", required_argument, nullptr, 'n' },
+{ "artist", required_argument, nullptr, 'a' },
+{ "listens", required_argument, nullptr, 'l' },
 { "help", no_argument, nullptr, 'h' },
 { nullptr, 0, nullptr, '\0' }};
 /*
@@ -111,37 +115,50 @@ the while loop conditional (currently contains "p:h").
 Options with required_argument (print) need a colon after the
 char, options with no_argument do not (help).
 */
-while ((option = getopt_long(argc, argv, "p:h", longOpts, &option_index)) != -
+
+
+while ((option = getopt_long(argc, argv, "p:n:a:l:h", longOpts, &option_index)) != -
 1) {
 switch (option) {
-case 'p':
-num_print = std::atoi(optarg);
-break;
 /*
 TODO: Add the remaining cases and decide what to do when they
 occur.
 */
+
+// Determines how many songs to print.
+case 'p':
+    num_print = std::atoi(optarg);
+    break;
+// Sorts by song title
+case 'n':
+    num_print = std::atoi(optarg);
+    break;
+// Sorts by song artist
+case 'a':
+    num_print = std::atoi(optarg);
+    break;
+// Sorts by number of listens that a song has.
+case 'l':
+    num_print = std::atoi(optarg);
+    break;
 case 'h':
-std::cout << "This program reads a CSV file that contains song
-names,\n"
-<< "the artist who wrote them, and the number of plays
-each song\n"
-<< "has on Spotify. It then outputs the number of songs
-specified\n"
-<< "in the command line arguments (the print option),
-which\n"
-<< "defaults to 2, sorted by the option specified (one
-of name,\n"
-<< "artist, or listens).\n"
+std::cout << "This program reads a CSV file that contains song names,\n" 
+          << "the artist who wrote them, and the number of plays each song\n"
+          << "has on Spotify. It then outputs the number of songs specified\n"
+          << "in the command line arguments (the print option), which\n"
+          << "defaults to 2, sorted by the option specified (one of name,\n"
+          << "artist, or listens).\n"
 << "Usage: \'./project0\n\t[--listens | -l]\n"
 << "\t[--name | -n]\n"
 << "\t[--artist | -a]\n"
-<< "\t[--print | -p] <# of songs to
-print>\n"
+<< "\t[--print | -p] <# of songs to print>\n"
 << "\t[--help | -h]\n"
 << "\t< <CSV Music File>\'" <<
 std::endl;
 exit(0);
+case 'q':
+
+    break;
 }
 }
 // After all the options have been processed,
@@ -213,8 +230,7 @@ music.push_back(song);
 }
 // If we didn't read in any data, throw an error.
 if (!music.size())
-throw std::runtime_error("No data was read in! Refer to the help option to
-see program usage.");
+throw std::runtime_error("No data was read in! Refer to the help option to see program usage.");
 }
 // Sort and print the data.
 void MusicLibrary::run() {
