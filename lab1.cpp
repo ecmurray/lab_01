@@ -104,24 +104,24 @@ TODO: Add the remaining elements into the longOpts array.
 // use getopt to find command line options
 struct option longOpts[] = {
 { "print", required_argument, nullptr, 'p' },
-{ "name", required_argument, nullptr, 'n' },
-{ "artist", required_argument, nullptr, 'a' },
-{ "listens", required_argument, nullptr, 'l' },
+{ "name", no_argument, nullptr, 'n' },
+{ "artist", no_argument, nullptr, 'a' },
+{ "listens", no_argument, nullptr, 'l' },
 { "help", no_argument, nullptr, 'h' },
 { nullptr, 0, nullptr, '\0' }};
 /*
-TODO: Add the remaining chars to the option string in
+DONE: Add the remaining chars to the option string in
 the while loop conditional (currently contains "p:h").
 Options with required_argument (print) need a colon after the
 char, options with no_argument do not (help).
 */
 
 
-while ((option = getopt_long(argc, argv, "p:n:a:l:h", longOpts, &option_index)) != -
+while ((option = getopt_long(argc, argv, "p:nalh", longOpts, &option_index)) != -
 1) {
 switch (option) {
 /*
-TODO: Add the remaining cases and decide what to do when they
+DONE: Add the remaining cases and decide what to do when they
 occur.
 */
 
@@ -131,15 +131,15 @@ case 'p':
     break;
 // Sorts by song title
 case 'n':
-    num_print = std::atoi(optarg);
+    policy = 'n';
     break;
 // Sorts by song artist
 case 'a':
-    num_print = std::atoi(optarg);
+    policy = 'a';
     break;
 // Sorts by number of listens that a song has.
 case 'l':
-    num_print = std::atoi(optarg);
+    policy = 'l';
     break;
 case 'h':
 std::cout << "This program reads a CSV file that contains song names,\n" 
@@ -239,8 +239,14 @@ if (policy == 'n') {
 std::sort(music.begin(), music.end(), Song::NameSort());
 }
 /*
-TODO: Add the remaining sorting cases (sorting by artist and listens).
+DONE: Add the remaining sorting cases (sorting by artist and listens).
 */
+if (policy == 'a') {
+std::sort(music.begin(), music.end(), Song::ArtistSort());
+}
+if (policy == 'l') {
+std::sort(music.begin(), music.end(), Song::ListensSort());
+}
 // Print out the first num_print songs with the
 // overloaded stream insertion operator.
 for (int i = 0; i < num_print; ++i)
